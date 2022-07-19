@@ -1,6 +1,6 @@
-import router from './';
+import { hooksRouter } from './';
 
-router.post('/ali-express', ctx => {
+hooksRouter.post('/ali-express', ctx => {
 	//chamar o provider e notificar no discord
 	ctx.body = 'ali-express';
 });

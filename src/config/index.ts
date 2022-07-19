@@ -3,7 +3,7 @@ dotenv.config();
 
 const { PORT, NODE_ENV, MONGO_TEST_URI, MONGO_URI, JWT_SECRET, BOT_TOKEN, LOG_LEVEL } = process.env;
 
-const config = {
+export const config = {
 	PORT: parseInt(PORT ?? '3000', 10),
 	NODE_ENV: NODE_ENV ?? 'development',
 	MONGO_URI,
@@ -13,5 +13,3 @@ const config = {
 	IS_DEV: NODE_ENV !== 'production',
 	LOG_LEVEL: LOG_LEVEL ?? 'silent',
 };
-
-export default config;

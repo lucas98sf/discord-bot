@@ -1,6 +1,6 @@
 import pino from 'koa-pino-logger';
 
-import config from './config';
+import { config } from './config';
 
 export const httpLogger = pino({
 	autoLogging: true,

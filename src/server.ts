@@ -1,9 +1,9 @@
 import app from '@/app';
-import config from '@/config';
+import { config } from '@/config';
 // import { connectToDatabase } from '@/db';
 import { logger } from '@/logger';
 
-import DiscordClient from './modules/discord/client';
+import { DiscordClient } from './modules/discord/client';
 
 const bootstrap = async () => {
 	// await connectToDatabase(config.MONGO_URI);

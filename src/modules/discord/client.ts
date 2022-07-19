@@ -1,12 +1,16 @@
-import { logger } from '@/logger';
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 
-import commands from './commands';
-import interactionCreate from './listeners/interaction-create';
+import { logger } from '@/logger';
+
+import { commands } from './commands';
+import { interactionCreate } from './listeners/interaction-create';
 
 // import * as twt from './twitter';
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds], partials: [Partials.Channel] });
+const client = new Client({
+	intents: [GatewayIntentBits.Guilds],
+	partials: [Partials.Channel],
+});
 
 client.on('ready', async () => {
 	if (!client.user || !client.application) {
@@ -18,4 +22,4 @@ client.on('ready', async () => {
 
 interactionCreate(client);
 
-export default client;
+export { client as DiscordClient };

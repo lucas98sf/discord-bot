@@ -1,9 +1,6 @@
-import type { Command } from '@/modules/discord/interfaces/Command';
-
+import type { Command } from './interfaces/Command';
 import { getPokemonSprite } from './pokemon';
 
-const commands: Command[] = [getPokemonSprite];
-
-export default commands;
+export const commands: Command[] = [getPokemonSprite];
 
 //todo: refactor this
