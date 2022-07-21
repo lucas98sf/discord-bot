@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  api:
+    build:
+      context: .
+      target: development
+    volumes:
+      - ./:/usr/src/disc-bot
+      - /usr/src/disc-bot/node_modules
+    ports:
+      - 4000:4000
+    command: yarn dev

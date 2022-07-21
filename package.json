@@ -14,11 +14,11 @@
 		"twitter-api-v2": "^1.11.2"
 	},
 	"scripts": {
-		"prepare": "husky install",
+		"prepare": "npx husky install",
 		"build": "npx rimraf ./dist && tsc",
 		"start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/server.js",
-		"test": "jest --runInBand --coverage",
-		"dev": "ts-node-dev -r tsconfig-paths/register --inspect --transpile-only --ignore-watch node_modules --respawn src/server.ts"
+		"dev": "ts-node-dev --poll -r tsconfig-paths/register --inspect --transpile-only --ignore-watch node_modules --respawn src/server.ts",
+		"test": "jest --runInBand --coverage"
 	},
 	"devDependencies": {
 		"@types/jest": "^28.1.4",
@@ -31,6 +31,7 @@
 		"dotenv": "^16.0.1",
 		"eslint": "^8.2.0",
 		"eslint-config-prettier": "^8.5.0",
+		"eslint-import-resolver-typescript": "^3.3.0",
 		"eslint-plugin-import": "^2.25.2",
 		"eslint-plugin-simple-import-sort": "^7.0.0",
 		"husky": ">=6",
