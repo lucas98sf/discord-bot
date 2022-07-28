@@ -14,7 +14,7 @@
 		"twitter-api-v2": "^1.11.2"
 	},
 	"scripts": {
-		"prepare": "husky install",
+		"prepare": "npx husky install",
 		"build": "npx rimraf ./dist && tsc",
 		"start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/server.js",
 		"test": "jest --runInBand --coverage",
