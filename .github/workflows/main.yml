@@ -1,0 +1,33 @@
+name: deploy_ec2
+on:
+  push:
+    branches: [master]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.x'
+
+      - name: Set environment variables from .env
+        run: |
+              touch .env
+              echo "NODE_ENV=production" >> .env
+              echo "BOT_TOKEN=${{ secrets.BOT_TOKEN }}" >> .env
+              echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
+              echo "PORT=${{ secrets.PORT }} >>" .env
+
+      - name: Install dependencies and build
+        run: npm ci && npm run build
+        
+      - name: Deploy to EC2
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_USER: ${{ secrets.SSH_USER }}
+          TARGET: /home/${{ secrets.SSH_USER }}/disc-bot
