@@ -1,9 +1,9 @@
-import pino from 'koa-pino-logger';
+import pino from 'pino';
 
 import { config } from './config';
 
-export const httpLogger = pino({
-	autoLogging: true,
+export const logger = pino({
+	// autoLogging: true,
 	useLevel: config.LOG_LEVEL,
 	transport: {
 		target: 'pino-pretty',
@@ -13,5 +13,3 @@ export const httpLogger = pino({
 		},
 	},
 });
-
-export const logger = httpLogger.logger;

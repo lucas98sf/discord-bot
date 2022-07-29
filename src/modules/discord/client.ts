@@ -4,6 +4,7 @@ import { logger } from '@/logger';
 
 import { commands } from './commands';
 import { interactionCreate } from './listeners/interaction-create';
+import { messageCreate } from './listeners/message-create';
 
 // import * as twt from './twitter';
 
@@ -21,5 +22,6 @@ client.on('ready', async () => {
 });
 
 interactionCreate(client);
+messageCreate(client);
 
 export { client as DiscordClient };
