@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"lib": ["es2021"],
+		"lib": ["es2021", "dom"],
 		"module": "commonjs",
 		"target": "es2021",
 		"strict": true,
@@ -25,5 +25,6 @@
 			"@/*": ["*"]
 		}
 	},
-	"include": ["src/**/*.ts"]
+	"include": ["src/**/**.ts"],
+	"exclude": ["node_modules", "**/*.d.ts", "**/*.test.ts"]
 }
