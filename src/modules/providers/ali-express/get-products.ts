@@ -1,17 +1,15 @@
-import { logger } from '@/logger';
 import puppeteer from 'puppeteer';
 
+import { logger } from '@/logger';
+
 type Maybe<T> = T | null | undefined;
-/**
- * @jest-environment jsdom
- */
 
 type Product = {
 	id: string;
 	image: string;
 	price: string;
 	name: string;
-	selled: number;
+	sold: number;
 	rating: number;
 };
 
@@ -22,7 +20,7 @@ const formatPrice = (price: string) =>
 
 export const getProducts = async (productName: string) => {
 	const browser = await puppeteer.launch({
-		headless: true,
+		headless: false,
 		args: ['--no-sandbox', '--disable-setuid-sandbox'],
 	});
 	const page = await browser.newPage();
@@ -51,6 +49,7 @@ export const getProducts = async (productName: string) => {
 
 			const infos = childrenArray(infosDiv);
 
+			//TODO: fix this for sales and price ranges
 			const price =
 				// formatPrice(
 				childrenArray(infos.find(info => info.innerHTML.includes('R$')))
@@ -62,7 +61,7 @@ export const getProducts = async (productName: string) => {
 
 			const name = infos.find(info => info.querySelector('h1'))?.textContent;
 
-			const [selled, , rating] = childrenArray(
+			const [sold, , rating] = childrenArray(
 				infos.find(info => info.innerHTML.includes(' vendido(s)'))
 			).map(span => span.innerHTML);
 
@@ -71,14 +70,15 @@ export const getProducts = async (productName: string) => {
 				image,
 				price,
 				name,
-				selled: Number(selled?.split(' ')[0]),
+				sold: Number(sold?.split(' ')[0]),
 				rating: parseFloat(rating ?? ''),
 			} as Product;
 		});
 	});
-	browser.close();
+	await browser.close();
 
-	const formatedProducts = structuredClone(products).map(product => {
+	//TODO: this could be better
+	products.map(product => {
 		product.id = product.id.split(' ').shift()!;
 		product.name = product.name
 			.split(' ')
@@ -88,7 +88,7 @@ export const getProducts = async (productName: string) => {
 
 		return product;
 	});
-	logger.debug(formatedProducts);
+	logger.debug(products);
 
-	return formatedProducts; //products;
+	return products;
 };

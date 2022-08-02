@@ -1,13 +1,17 @@
-import { ApplicationCommandOptionType, ApplicationCommandType, EmbedData } from 'discord.js';
+import {
+	ApplicationCommandOptionType,
+	ApplicationCommandType,
+	EmbedData,
+	InteractionReplyOptions,
+} from 'discord.js';
 
 import { logger } from '@/logger';
+import { getProducts } from '@/modules/providers/ali-express/get-products';
 
-//todo: better imports
-import type { Command } from './interfaces/Command';
-import { getProducts } from '@/providers/ali-express/query-product';
+import type { Command } from '../interfaces';
 
-export const getProduct: Command = {
-	name: 'query-product',
+export const queryProducts: Command = {
+	name: 'query-products',
 	description: 'Returns 5 first products from Ali Express',
 	type: ApplicationCommandType.ChatInput,
 	options: [
@@ -29,29 +33,28 @@ export const getProduct: Command = {
 					color: 4,
 					url: `https://pt.aliexpress.com/item/${product.id}.html`,
 					thumbnail: { url: `http:${product.image}` },
-					description: `⭐ ${product.rating ?? '❓'}`, //product.price,
+					description: `⭐ ${product.rating ?? '❓'}`,
 					fields: [
 						{
 							name: 'Vendidos:',
-							value: String(product.selled),
+							value: String(product.sold) ?? '❓',
 							inline: true,
 						},
 						{
 							name: 'Preço:',
-							value: String(product.price),
+							value: String(product.price) ?? '❓',
 							inline: true,
 						},
 					],
 				};
 				return embed;
-			});
+			}) as InteractionReplyOptions;
 
-			// @ts-ignore
-			await interaction.followUp({ embeds });
+			await interaction.followUp(embeds);
 		} catch (error) {
 			logger.error(error);
 			await interaction.followUp({
-				content: `DESGRACA ASJKLFASHJGFABDHJK`,
+				content: JSON.stringify(error, null, 2),
 			});
 		}
 	},

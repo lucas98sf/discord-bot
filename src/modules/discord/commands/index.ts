@@ -1,7 +1,5 @@
-import type { Command } from './interfaces/Command';
+import type { Command } from '../interfaces';
 import { getPokemonSprite } from './pokemon';
-import { getProduct } from './promos';
+import { queryProducts } from './promos';
 
-export const commands: Command[] = [getPokemonSprite, getProduct];
-
-//todo: refactor this
+export const commands: Command[] = [getPokemonSprite, queryProducts];

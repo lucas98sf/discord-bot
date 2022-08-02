@@ -1,3 +1,3 @@
-# simple-todo-api
+# discord bot
 
 WIP

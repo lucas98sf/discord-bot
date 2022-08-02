@@ -1,15 +1,20 @@
-import { Client, GatewayIntentBits, Partials } from 'discord.js';
+import { Client, GatewayIntentBits, Interaction, Message, Partials } from 'discord.js';
 
 import { logger } from '@/logger';
 
 import { commands } from './commands';
-import { interactionCreate } from './listeners/interaction-create';
-import { messageCreate } from './listeners/message-create';
-
-// import * as twt from './twitter';
+import { handleSlashCommand } from './util/handle-slash-command';
 
 const client = new Client({
-	intents: [GatewayIntentBits.Guilds],
+	intents: [
+		GatewayIntentBits.DirectMessages,
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildPresences,
+		GatewayIntentBits.GuildMembers,
+		GatewayIntentBits.GuildBans,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.MessageContent,
+	],
 	partials: [Partials.Channel],
 });
 
@@ -21,7 +26,14 @@ client.on('ready', async () => {
 	logger.info(`Discord BOT logged in as ${client.user.tag}!`);
 });
 
-interactionCreate(client);
-messageCreate(client);
+client.on('interactionCreate', async (interaction: Interaction) => {
+	if (interaction.isChatInputCommand()) {
+		await handleSlashCommand(interaction);
+	}
+});
+
+client.on('messageCreate', (message: Message) => {
+	logger.info(`Message from ${message.author.tag} in ${message.channel.id}`);
+});
 
 export { client as DiscordClient };

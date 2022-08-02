@@ -15,20 +15,18 @@ jobs:
 
       - name: Set environment variables from .env
         run: |
-              touch .env
-              echo "NODE_ENV=production" >> .env
-              echo "BOT_TOKEN=${{ secrets.BOT_TOKEN }}" >> .env
-              echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
-              echo "PORT=${{ secrets.PORT }} >>" .env
+          touch .env
+          echo "NODE_ENV=production" >> .env
+          echo "BOT_TOKEN=${{ secrets.BOT_TOKEN }}" >> .env
+          echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
+          echo "PORT=${{ secrets.PORT }} >>" .env
 
-			- name: Install puppeteer libraries
-				run: |
-					sudo apt-get update
-					sudo apt-get install -y libgbm1
+      - name: Install puppeteer libraries
+        run: sudo apt-get update && sudo apt-get install -y libgbm1
 
       - name: Install dependencies and build
         run: npm ci && npm run build
-        
+
       - name: Deploy to EC2
         uses: easingthemes/ssh-deploy@main
         env:
