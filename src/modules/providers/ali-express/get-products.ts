@@ -24,12 +24,7 @@ export const getProducts = async (productName: string) => {
 		args: ['--no-sandbox', '--disable-setuid-sandbox'],
 	});
 	const page = await browser.newPage();
-	await page.goto('https://pt.aliexpress.com');
-
-	const input = await page.waitForSelector('#search-key');
-	await input!.type(productName);
-	await input!.press('Enter');
-	await page.waitForNavigation();
+	await page.goto(`https://pt.aliexpress.com/wholesale?SearchText=${productName}`);
 
 	const products: Product[] = await page.evaluate(() => {
 		const maxProducts = 5;
