@@ -20,7 +20,7 @@ const formatPrice = (price: string) =>
 
 export const getProducts = async (productName: string) => {
 	const browser = await puppeteer.launch({
-		headless: false,
+		headless: true,
 		args: ['--no-sandbox', '--disable-setuid-sandbox'],
 	});
 	const page = await browser.newPage();
