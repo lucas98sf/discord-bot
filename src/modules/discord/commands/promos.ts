@@ -1,8 +1,8 @@
 import {
 	ApplicationCommandOptionType,
 	ApplicationCommandType,
+	EmbedBuilder,
 	EmbedData,
-	InteractionReplyOptions,
 } from 'discord.js';
 
 import { logger } from '@/logger';
@@ -47,10 +47,10 @@ export const queryProducts: Command = {
 						},
 					],
 				};
-				return embed;
-			}) as InteractionReplyOptions;
+				return new EmbedBuilder(embed);
+			});
 
-			await interaction.followUp(embeds);
+			await interaction.followUp({ embeds });
 		} catch (error) {
 			logger.error(error);
 			await interaction.followUp({
