@@ -7,16 +7,11 @@ type Maybe<T> = T | null | undefined;
 type Product = {
 	id: string;
 	image: string;
-	price: string;
+	price: Maybe<string>;
 	name: string;
-	sold: number;
-	rating: number;
+	sold: Maybe<number>;
+	rating: Maybe<number>;
 };
-
-const formatPrice = (price: string) =>
-	new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
-		+parseFloat(price).toFixed(2)
-	);
 
 export const getProducts = async (productName: string) => {
 	const browser = await puppeteer.launch({
@@ -45,14 +40,15 @@ export const getProducts = async (productName: string) => {
 			const infos = childrenArray(infosDiv);
 
 			//TODO: fix this for sales and price ranges
-			const price =
-				// formatPrice(
-				childrenArray(infos.find(info => info.innerHTML.includes('R$')))
-					.map(priceSpan => priceSpan.textContent)
-					.filter(text => text?.match(/^\d+[\d]|,/))
-					.join('')
-					.replace(',', '.');
-			// );
+			const formatPrice = (price: string) =>
+				new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
+					+parseFloat(price).toFixed(2)
+				);
+			const price = childrenArray(infos.find(info => info.innerHTML.includes('R$')))
+				.map(priceSpan => priceSpan.textContent)
+				.filter(text => text?.match(/^\d+[\d]|,/))
+				.join('')
+				.replace(',', '.');
 
 			const name = infos.find(info => info.querySelector('h1'))?.textContent;
 
@@ -61,29 +57,18 @@ export const getProducts = async (productName: string) => {
 			).map(span => span.innerHTML);
 
 			return {
-				id,
+				id: id!.split(' ').shift(),
 				image,
-				price,
+				price: formatPrice(price) || null,
 				name,
-				sold: Number(sold?.split(' ')[0]),
-				rating: parseFloat(rating ?? ''),
+				sold: Number(sold?.split(' ')[0]) || null,
+				rating: parseFloat(rating!) || null,
 			} as Product;
 		});
 	});
 	await browser.close();
 
-	//TODO: this could be better
-	products.map(product => {
-		product.id = product.id.split(' ').shift()!;
-		product.name = product.name
-			.split(' ')
-			.slice(0, 8 ?? product.name.split(' ').length)
-			.join(' ')!;
-		product.price = formatPrice(product.price);
-
-		return product;
-	});
-	logger.debug(products);
+	logger.info(products);
 
 	return products;
 };

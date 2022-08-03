@@ -33,16 +33,16 @@ export const queryProducts: Command = {
 					color: 4,
 					url: `https://pt.aliexpress.com/item/${product.id}.html`,
 					thumbnail: { url: `http:${product.image}` },
-					description: `⭐ ${product.rating ?? '❓'}`,
+					description: `⭐ ${product.rating ? String(product.rating) : '❓'}`,
 					fields: [
 						{
 							name: 'Vendidos:',
-							value: String(product.sold) ?? '❓',
+							value: product.sold ? String(product.sold) : '❓',
 							inline: true,
 						},
 						{
 							name: 'Preço:',
-							value: String(product.price) ?? '❓',
+							value: product.price ? String(product.price) : '❓',
 							inline: true,
 						},
 					],
