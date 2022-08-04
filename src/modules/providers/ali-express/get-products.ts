@@ -19,7 +19,7 @@ export const getProducts = async (productName: string) => {
 		args: ['--no-sandbox', '--disable-setuid-sandbox'],
 	});
 	const page = await browser.newPage();
-	const url = 'https://pt.aliexpress.com/';
+	const url = 'https://pt.aliexpress.com';
 
 	const context = browser.defaultBrowserContext();
 	await context.overridePermissions(url, ['geolocation']);
@@ -75,7 +75,7 @@ export const getProducts = async (productName: string) => {
 
 	await browser.close();
 
-	logger.info(products);
+	logger.info(JSON.stringify(products));
 
 	return products;
 };
