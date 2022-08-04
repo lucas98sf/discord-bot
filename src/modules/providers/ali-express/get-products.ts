@@ -13,6 +13,11 @@ type Product = {
 	rating: Maybe<number>;
 };
 
+const formatPrice = (price: string) =>
+	new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
+		+parseFloat(price).toFixed(2)
+	);
+
 export const getProducts = async (productName: string) => {
 	const browser = await puppeteer.launch({
 		headless: true,
@@ -40,10 +45,6 @@ export const getProducts = async (productName: string) => {
 			const infos = childrenArray(infosDiv);
 
 			//TODO: fix this for sales and price ranges
-			const formatPrice = (price: string) =>
-				new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
-					+parseFloat(price).toFixed(2)
-				);
 			const price = childrenArray(infos.find(info => info.innerHTML.includes('R$')))
 				.map(priceSpan => priceSpan.textContent)
 				.filter(text => text?.match(/^\d+[\d]|,/))
@@ -59,16 +60,19 @@ export const getProducts = async (productName: string) => {
 			return {
 				id: id!.split(' ').shift(),
 				image,
-				price: formatPrice(price) || null,
+				price, //: formatPrice(price) || null,
 				name,
 				sold: Number(sold?.split(' ')[0]) || null,
 				rating: parseFloat(rating!) || null,
 			} as Product;
 		});
 	});
+	logger.info(`Prices: ${products.map(p => p.price!).join(' - ')})}`);
+	logger.info(`Formatted prices: ${products.map(p => formatPrice(p.price!)).join(' - ')})}`);
+
 	await browser.close();
 
-	logger.info(products);
+	// logger.info(products);
 
 	return products;
 };
