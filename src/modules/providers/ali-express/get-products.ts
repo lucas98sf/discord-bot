@@ -13,18 +13,19 @@ type Product = {
 	rating: Maybe<number>;
 };
 
-const formatPrice = (price: string) =>
-	new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
-		+parseFloat(price).toFixed(2)
-	);
-
 export const getProducts = async (productName: string) => {
 	const browser = await puppeteer.launch({
 		headless: true,
 		args: ['--no-sandbox', '--disable-setuid-sandbox'],
 	});
 	const page = await browser.newPage();
-	await page.goto(`https://pt.aliexpress.com/wholesale?SearchText=${productName}`);
+	const url = 'https://pt.aliexpress.com/';
+
+	const context = browser.defaultBrowserContext();
+	await context.overridePermissions(url, ['geolocation']);
+
+	await page.goto(`${url}/wholesale?SearchText=${productName}`);
+	await page.setGeolocation({ latitude: -23, longitude: -46 });
 
 	const products: Product[] = await page.evaluate(() => {
 		const maxProducts = 5;
@@ -44,6 +45,10 @@ export const getProducts = async (productName: string) => {
 
 			const infos = childrenArray(infosDiv);
 
+			const formatPrice = (price: string) =>
+				new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
+					+parseFloat(price).toFixed(2)
+				);
 			//TODO: fix this for sales and price ranges
 			const price = childrenArray(infos.find(info => info.innerHTML.includes('R$')))
 				.map(priceSpan => priceSpan.textContent)
@@ -60,19 +65,17 @@ export const getProducts = async (productName: string) => {
 			return {
 				id: id!.split(' ').shift(),
 				image,
-				price, //: formatPrice(price) || null,
+				price: formatPrice(price) || null,
 				name,
 				sold: Number(sold?.split(' ')[0]) || null,
 				rating: parseFloat(rating!) || null,
 			} as Product;
 		});
 	});
-	logger.info(`Prices: ${products.map(p => p.price!).join(' - ')})}`);
-	logger.info(`Formatted prices: ${products.map(p => formatPrice(p.price!)).join(' - ')})}`);
 
 	await browser.close();
 
-	// logger.info(products);
+	logger.info(products);
 
 	return products;
 };
