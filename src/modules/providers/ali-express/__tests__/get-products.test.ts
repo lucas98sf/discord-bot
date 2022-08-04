@@ -16,8 +16,8 @@ describe('Ali-express web scrapping', () => {
 			expect(typeof image).toBe('string');
 			expect(image.endsWith('.webp')).toBeTruthy();
 
-			expect(price === null ||
-				(typeof price === 'string' && price.match(/^R\$\s\d+,\d+/))
+			expect(
+				price === null || (typeof price === 'string' && price.match(/^R\$\s\d+,\d+/))
 			).toBeTruthy();
 
 			expect(typeof name).toBe('string');

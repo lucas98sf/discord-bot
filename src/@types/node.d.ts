@@ -7,7 +7,7 @@ declare global {
 			MONGO_URI: string;
 			JWT_SECRET: string;
 			BOT_TOKEN: string;
-			IS_DEV: boolean;
+			IS_DEV: string;
 			LOG_LEVEL: 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace' | 'silent';
 		}
 	}

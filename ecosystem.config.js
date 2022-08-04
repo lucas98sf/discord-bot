@@ -5,7 +5,8 @@ module.exports = {
 			time: true,
 			script: 'npm',
 			args: 'start',
-			watch: true, watch: ["dist"], watch_delay: 30000
+			watch: ['dist'],
+			watch_delay: 10000,
 		},
 	],
 };
