@@ -8,7 +8,7 @@ export default async () => {
 		)
 		.then(res => res.data as Record<string, any> & { cand: any[] });
 
-	const canditatos: any[] = res.cand.filter((item: any) => item.seq < 6);
+	const canditatos: any[] = res.cand.filter((item: any) => item.seq < 5);
 
 	const json = {
 		Apurados: `${res.pst as string}%`,
