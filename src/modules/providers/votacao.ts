@@ -4,7 +4,7 @@ import { EmbedBuilder } from 'discord.js';
 export default async () => {
 	const res: any = await axios
 		.get(
-			'https://resultados.tse.jus.br/oficial/ele2022/544/dados-simplificados/br/br-c0001-e000544-r.json'
+			'https://resultados.tse.jus.br/oficial/ele2022/545/dados-simplificados/br/br-c0001-e000545-r.json'
 		)
 		.then(res => res.data as Record<string, any> & { cand: any[] });
 
